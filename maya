@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# //////////////////////////////////////////////////////////// #
+# //              THIS SCRIPT WAS MADE USING                // #
+# //              OPENBSD-NETCAT AND TIMEOUT                // #
+# //       WITHOUT THE TIMEOUT COMMAND WILL NOT WORK        // #
+# //////////////////////////////////////////////////////////// # by: n0w4k ^\
+
+if [ "$1" == "" ];then
+	printf "\n%s [host] [timing]\n\n\t%s prf.gov.br\n\t%s prf.gov.br 10\n\n" $0 $0 $0;exit 0
+elif ! [[ -f "/usr/bin/nc" || -f "/bin/nc" ]];then
+	printf "\nnetcat not found\n";exit 0
+elif ! [[ -f "/usr/bin/timeout" || -f "/bin/timeout" ]];then
+	printf "\ntimeout not found\n";exit 0
+fi
+
+if [ ! "$2" == "" ];then
+	printf "\n-------------------------\nHost: %s\nTiming: %s\n-------------------------\n\n" $1 $2
+	printf "GET /reversedns/?q=%s HTTP/1.1\nHost: api.hackertarget.com\r\n\r\n" $1|timeout $2 nc api.hackertarget.com 80|grep "$1"
+else
+	printf "\n-------------------------\nHost: %s\nTiming (default): 5\n-------------------------\n\n" $1
+	printf "GET /reversedns/?q=%s HTTP/1.1\nHost: api.hackertarget.com\r\n\r\n" $1|timeout 5 nc api.hackertarget.com 80|grep "$1"
+fi
+echo
